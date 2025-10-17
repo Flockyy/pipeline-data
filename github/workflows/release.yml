@@ -1,10 +1,10 @@
-
 name: CI/CD - Main Branch
 
 on:
   push:
     branches:
       - main
+      - develop
 
 jobs:
 
