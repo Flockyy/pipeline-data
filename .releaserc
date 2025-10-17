@@ -1,5 +1,5 @@
 {
-  "branches": ["main", "dev"],
+  "branches": ["main", "develop"],
   "repositoryUrl": "https://github.com/Flockyy/pipeline-data",
   "plugins": [
     "@semantic-release/commit-analyzer",
