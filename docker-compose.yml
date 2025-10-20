@@ -17,7 +17,18 @@ services:
       interval: 10s
       timeout: 5s
       retries: 5
-
+  mongodb:
+    image: mongo:7
+    container_name: nyc-taxi-mongodb
+    command: ["mongod", "--bind_ip_all"]
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: admin
+      MONGO_INITDB_ROOT_PASSWORD: admin
+      MONGO_INITDB_DATABASE: ${MONGO_DB:-nyc_taxi_clean}
+    ports:
+      - "27017:27017"
+    volumes:
+      - mongodb_data:/data/db
   app:
     build:
       context: .
@@ -41,3 +52,4 @@ services:
 
 volumes:
   postgres_data:
+  mongodb_data:
