@@ -2,6 +2,14 @@
 
 <!-- version list -->
 
+## v1.0.0-rc.4 (2025-10-21)
+
+### Features
+
+- Add dlt pipeline
+  ([`3771eba`](https://github.com/Flockyy/pipeline-data/commit/3771ebaf788a1986f0886755c41f6ad27249693d))
+
+
 ## v1.0.0-rc.3 (2025-10-17)
 
 
