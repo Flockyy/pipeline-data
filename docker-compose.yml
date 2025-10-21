@@ -18,17 +18,38 @@ services:
       timeout: 5s
       retries: 5
 
+  mongodb:
+    image: mongo:7
+    container_name: nyc-taxi-mongodb
+    command: ["mongod", "--quiet", "--bind_ip_all"]
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: admin
+      MONGO_INITDB_ROOT_PASSWORD: admin
+      MONGO_INITDB_DATABASE: ${MONGO_DB:-nyc_taxi_clean}
+    ports:
+      - "27019:27017"
+    volumes:
+      - mongodb_data:/data/db
+
   app:
     build:
       context: .
       dockerfile: Dockerfile
     container_name: nyc-taxi-app
     environment:
+      # App & Postgres
       POSTGRES_USER: ${POSTGRES_USER:-postgres}
       POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-postgres}
       POSTGRES_DB: ${POSTGRES_DB:-nyc_taxi}
       POSTGRES_HOST: postgres
       POSTGRES_PORT: 5432
+
+      # DLT expected environment variables (for Postgres destination)
+      DESTINATION__POSTGRES__CREDENTIALS__USERNAME: ${POSTGRES_USER:-postgres}
+      DESTINATION__POSTGRES__CREDENTIALS__PASSWORD: ${POSTGRES_PASSWORD:-postgres}
+      DESTINATION__POSTGRES__CREDENTIALS__DATABASE: ${POSTGRES_DB:-nyc_taxi}
+      DESTINATION__POSTGRES__CREDENTIALS__HOST: postgres
+      DESTINATION__POSTGRES__CREDENTIALS__PORT: 5432
     ports:
       - "8000:8000"
     volumes:
@@ -41,3 +62,4 @@ services:
 
 volumes:
   postgres_data:
+  mongodb_data:

@@ -2,7 +2,7 @@ import requests
 from pathlib import Path
 from datetime import datetime
 from tqdm import tqdm  # Pretty progress bar
-
+from import_to_duckdb import DuckDBImporter
 
 class NYCTaxiDataDownloader:
     def __init__(self, year: int = 2025, data_dir: str = "data/raw"):
@@ -32,11 +32,11 @@ class NYCTaxiDataDownloader:
 
         # Skip existing files
         if self.file_exists(month):
-            print(f"✅ {file_path.name} already exists — skipping download.")
+            print(f"{file_path.name} already exists — skipping download.")
             return True
 
         url = f"{self.BASE_URL}/yellow_tripdata_{self.YEAR}-{month:02d}.parquet"
-        print(f"⬇️ Downloading from {url}...")
+        print(f"Downloading from {url}...")
 
         try:
             with requests.get(url, stream=True, timeout=30) as response:
@@ -58,11 +58,11 @@ class NYCTaxiDataDownloader:
                             f.write(chunk)
                             pbar.update(len(chunk))
 
-            print(f"✅ Downloaded: {file_path.name}\n")
+            print(f"Downloaded: {file_path.name}\n")
             return True
 
         except requests.exceptions.RequestException as e:
-            print(f"❌ Error downloading {file_path.name}: {e}")
+            print(f"Error downloading {file_path.name}: {e}")
             # Delete partial file if an error occurs
             if file_path.exists():
                 file_path.unlink()
@@ -73,16 +73,23 @@ class NYCTaxiDataDownloader:
         now = datetime.now()
         months = range(1, now.month + 1) if self.YEAR == now.year else range(1, 13)
 
-        print(f"📦 Downloading NYC Yellow Taxi data for {self.YEAR}...\n")
+        print(f"Downloading NYC Yellow Taxi data for {self.YEAR}...\n")
         downloaded_files = []
 
         for month in months:
             if self.download_month(month):
                 downloaded_files.append(self.get_file_path(month))
 
-        print("\n📊 Summary:")
+        print("\nSummary:")
         for f in downloaded_files:
             print(f" - {f.name}")
 
-        print(f"\n✅ {len(downloaded_files)} files available/downloaded successfully.")
+        print(f"\n{len(downloaded_files)} files available/downloaded successfully.")
         return downloaded_files
+
+downloader = NYCTaxiDataDownloader(year=2025, data_dir="data/raw")
+downloader.download_all_available()
+importer = DuckDBImporter("yellow_taxi.duckdb")
+importer.import_all_parquet_files(Path("data/raw"))
+importer.get_statistics()
+importer.close()
