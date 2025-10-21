@@ -16,9 +16,7 @@ class DataCleaner:
         self.collection = self.mongo_db["cleaned_trips"]
         print("✅ Connections initialized successfully (PostgreSQL & MongoDB)")
 
-    # ----------------------------
     # Connections
-    # ----------------------------
     def _get_postgres_engine(self):
         user = os.getenv("POSTGRES_USER", "postgres")
         password = os.getenv("POSTGRES_PASSWORD", "postgres")
@@ -41,9 +39,7 @@ class DataCleaner:
         client.server_info()  # force connection check
         return client
 
-    # ----------------------------
     # Cleaning rules
-    # ----------------------------
     def clean_chunk(self, df: pd.DataFrame) -> pd.DataFrame:
         """Apply cleaning rules to a single DataFrame chunk."""
         for col in ["passenger_count", "trip_distance", "fare_amount", "tip_amount", "tolls_amount", "total_amount"]:
@@ -64,9 +60,7 @@ class DataCleaner:
 
         return df
 
-    # ----------------------------
     # Batch processing
-    # ----------------------------
     def process_batches(self):
         """Process PostgreSQL table in batches and save cleaned data to MongoDB."""
         with self.postgres_engine.connect() as conn:
@@ -100,19 +94,15 @@ class DataCleaner:
                 offset += CHUNK_SIZE
                 pbar.update(len(df_chunk))
             pbar.close()
-        print("✅ Batch cleaning complete!")
+        print("Batch cleaning complete!")
 
-    # ----------------------------
     # Close MongoDB
-    # ----------------------------
     def close(self):
         self.mongo_client.close()
         print("MongoDB connection closed.")
 
 
-# ----------------------------
 # Main
-# ----------------------------
 if __name__ == "__main__":
     cleaner = DataCleaner()
     try:

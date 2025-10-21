@@ -58,7 +58,7 @@ class NYCTaxiDataDownloader:
                             f.write(chunk)
                             pbar.update(len(chunk))
 
-            print(f"✅ Downloaded: {file_path.name}\n")
+            print(f"Downloaded: {file_path.name}\n")
             return True
 
         except requests.exceptions.RequestException as e:

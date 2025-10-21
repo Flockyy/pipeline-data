@@ -5,9 +5,7 @@ import pandas as pd
 from io import StringIO
 from tqdm import tqdm
 
-# -----------------------------
 # Config
-# -----------------------------
 DUCKDB_FILE = os.getenv("DUCKDB_FILE", "yellow_taxi.duckdb")
 TABLE_NAME = os.getenv("TABLE_NAME", "yellow_taxi_trips")
 CHUNK_SIZE = int(os.getenv("CHUNK_SIZE", 500_000))
@@ -41,14 +39,10 @@ COLUMN_MAPPING = {
     "Airport_fee": "airport_fee"
 }
 
-# -----------------------------
 # DuckDB connection
-# -----------------------------
 con = duckdb.connect(DUCKDB_FILE)
 
-# -----------------------------
 # PostgreSQL connection
-# -----------------------------
 pg_conn = psycopg2.connect(
     dbname=PG_DB,
     user=PG_USER,
@@ -57,15 +51,11 @@ pg_conn = psycopg2.connect(
     port=PG_PORT
 )
 
-# -----------------------------
 # Fetch total number of rows
-# -----------------------------
 total_rows = con.execute("SELECT COUNT(*) FROM yellow_taxi_trips").fetchone()[0]
 print(f"Total rows in DuckDB: {total_rows}")
 
-# -----------------------------
 # Batch export
-# -----------------------------
 offset = 0
 while offset < total_rows:
     df = con.execute(f"""

@@ -76,7 +76,7 @@ class DuckDBImporter:
 
             col_list = ", ".join(common_cols)
 
-            print(f"📥 Importing {filename} ({len(common_cols)} matching columns)...")
+            print(f"Importing {filename} ({len(common_cols)} matching columns)...")
             self.conn.execute(f"""
                 INSERT INTO yellow_taxi_trips ({col_list})
                 SELECT {col_list} FROM read_parquet('{file_path}')
@@ -90,18 +90,18 @@ class DuckDBImporter:
                 VALUES (?, ?, ?)
             """, [filename, datetime.now(), rows_imported])
 
-            print(f"✅ {filename} imported successfully ({rows_imported} rows).")
+            print(f"{filename} imported successfully ({rows_imported} rows).")
             return True
 
         except Exception as e:
-            print(f"❌ Error importing {filename}: {e}")
+            print(f"Error importing {filename}: {e}")
             return False
 
     def import_all_parquet_files(self, data_dir: Path) -> int:
         """Import all Parquet files from the specified directory."""
         parquet_files = sorted(data_dir.glob("*.parquet"))
         if not parquet_files:
-            print("⚠️ No .parquet files found in the directory.")
+            print("No .parquet files found in the directory.")
             return 0
 
         imported_count = 0
@@ -109,7 +109,7 @@ class DuckDBImporter:
             if self.import_parquet(file):
                 imported_count += 1
 
-        print(f"📊 Imported {imported_count}/{len(parquet_files)} files successfully.")
+        print(f"Imported {imported_count}/{len(parquet_files)} files successfully.")
         return imported_count
 
     def get_statistics(self):
@@ -127,7 +127,7 @@ class DuckDBImporter:
 
         db_size_mb = os.path.getsize(self.db_path) / (1024 * 1024)
 
-        print("\n📈 DuckDB Database Statistics")
+        print("\nDuckDB Database Statistics")
         print(f" - Total trips        : {total_trips:,}")
         print(f" - Files imported     : {imported_files}")
         print(f" - Pickup date range  : {date_range[0]} → {date_range[1]}")
