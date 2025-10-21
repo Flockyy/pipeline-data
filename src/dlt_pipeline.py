@@ -1,4 +1,3 @@
-import os
 import dlt
 import pandas as pd
 from pathlib import Path

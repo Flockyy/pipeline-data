@@ -3,7 +3,6 @@ import duckdb
 import psycopg2
 import pandas as pd
 from io import StringIO
-from tqdm import tqdm
 
 # Config
 DUCKDB_FILE = os.getenv("DUCKDB_FILE", "yellow_taxi.duckdb")

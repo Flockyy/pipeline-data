@@ -1,6 +1,5 @@
 import os
 import pandas as pd
-from typing import Dict
 from sqlalchemy import create_engine, text
 from pymongo import MongoClient
 from tqdm import tqdm
