@@ -3,7 +3,7 @@ from datetime import datetime
 from typing import Optional, List
 
 
-# --- Base Schemas ---
+# Base Schemas
 
 class TaxiTripBase(BaseModel):
     vendor_id: Optional[str] = None

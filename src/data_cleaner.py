@@ -13,7 +13,7 @@ class DataCleaner:
         self.mongo_client = self._get_mongo_client()
         self.mongo_db = self.mongo_client["nyc_taxi"]
         self.collection = self.mongo_db["cleaned_trips"]
-        print("✅ Connections initialized successfully (PostgreSQL & MongoDB)")
+        print("Connections initialized successfully (PostgreSQL & MongoDB)")
 
     # Connections
     def _get_postgres_engine(self):
