@@ -2,6 +2,14 @@
 
 <!-- version list -->
 
+## v1.0.0-rc.5 (2025-10-22)
+
+### Features
+
+- Optimized DLT
+  ([`5acff06`](https://github.com/Flockyy/pipeline-data/commit/5acff063a67f28dc919439f060fe4852c932f04d))
+
+
 ## v1.0.0-rc.4 (2025-10-21)
 
 ### Features
