@@ -2,6 +2,14 @@
 
 <!-- version list -->
 
+## v1.0.0 (2025-10-22)
+
+### Chores
+
+- Typo cleaning
+  ([`649ec76`](https://github.com/Flockyy/pipeline-data/commit/649ec76f0e4df3a72ba0ca1fc8ef3a92e5980baf))
+
+
 ## v1.0.0-rc.5 (2025-10-22)
 
 ### Features
