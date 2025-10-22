@@ -33,7 +33,7 @@ dependencies = [
 # =============================================================================
 # URLs qui apparaissent dans les métadonnées du package (sur PyPI, etc.)
 [project.urls]
-Repository = "https://github.com/gsoulat/semantic-release-uv"
+Repository = "https://github.com/Flockyy/pipeline-data"
 # Vous pouvez ajouter d'autres URLs comme:
 # Documentation = "https://..."
 # "Bug Tracker" = "https://..."
