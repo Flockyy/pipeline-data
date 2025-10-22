@@ -6,12 +6,12 @@ from src import models, schemas
 class TaxiTripService:
     @staticmethod
     def get_trip(db: Session, trip_id: int):
-        """Récupère un trajet par ID"""
+        """Retrieve a trip by its ID"""
         return db.query(models.YellowTaxiTrip).filter(models.YellowTaxiTrip.id == trip_id).first()
 
     @staticmethod
     def get_trips(db: Session, skip: int = 0, limit: int = 100):
-        """Récupère une liste de trajets avec pagination"""
+        """Retrieve a paginated list of trips"""
         query = db.query(models.YellowTaxiTrip)
         total = query.count()
         trips = query.offset(skip).limit(limit).all()
@@ -19,7 +19,7 @@ class TaxiTripService:
 
     @staticmethod
     def create_trip(db: Session, trip: schemas.TaxiTripCreate):
-        """Crée un nouveau trajet"""
+        """Create a new trip"""
         db_trip = models.YellowTaxiTrip(**trip.dict())
         db.add(db_trip)
         db.commit()
@@ -28,7 +28,7 @@ class TaxiTripService:
 
     @staticmethod
     def update_trip(db: Session, trip_id: int, trip: schemas.TaxiTripUpdate):
-        """Met à jour un trajet existant"""
+        """Update an existing trip"""
         db_trip = db.query(models.YellowTaxiTrip).filter(models.YellowTaxiTrip.id == trip_id).first()
         if not db_trip:
             return None
@@ -40,7 +40,7 @@ class TaxiTripService:
 
     @staticmethod
     def delete_trip(db: Session, trip_id: int):
-        """Supprime un trajet"""
+        """Delete a trip"""
         db_trip = db.query(models.YellowTaxiTrip).filter(models.YellowTaxiTrip.id == trip_id).first()
         if not db_trip:
             return False
@@ -50,7 +50,7 @@ class TaxiTripService:
 
     @staticmethod
     def get_statistics(db: Session):
-        """Calcule les statistiques sur les trajets"""
+        """Compute trip statistics"""
         total_trips = db.query(func.count(models.YellowTaxiTrip.id)).scalar()
         earliest_trip = db.query(func.min(models.YellowTaxiTrip.pickup_datetime)).scalar()
         latest_trip = db.query(func.max(models.YellowTaxiTrip.dropoff_datetime)).scalar()
