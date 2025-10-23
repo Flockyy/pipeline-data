@@ -10,10 +10,8 @@ POSTGRES_DB = os.getenv("POSTGRES_DB", "nyc_taxi")
 POSTGRES_HOST = os.getenv("POSTGRES_HOST", "localhost")
 POSTGRES_PORT = os.getenv("POSTGRES_PORT", "5432")
 
-# Build pgsql url 
-DATABASE_URL = (
-    f"postgresql://{POSTGRES_USER}:{POSTGRES_PASSWORD}@{POSTGRES_HOST}:{POSTGRES_PORT}/{POSTGRES_DB}"
-)
+# Build pgsql url
+DATABASE_URL = f"postgresql://{POSTGRES_USER}:{POSTGRES_PASSWORD}@{POSTGRES_HOST}:{POSTGRES_PORT}/{POSTGRES_DB}"
 
 # SQLAlchemy engine
 engine = create_engine(DATABASE_URL)
@@ -43,5 +41,6 @@ def init_db():
     À appeler au démarrage de l'application si nécessaire.
     """
     # Importer les modèles ici pour que Base connaisse les tables
-    from src import models # Assure-toi que src/models.py existe
+    from src import models  # Assure-toi que src/models.py existe
+
     Base.metadata.create_all(bind=engine)

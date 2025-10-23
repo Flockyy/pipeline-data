@@ -6,6 +6,7 @@ from tqdm import tqdm
 
 CHUNK_SIZE = 500_000  # batch size, adjust for your memory
 
+
 class DataCleaner:
     def __init__(self):
         """Initialize PostgreSQL and MongoDB connections."""
@@ -32,7 +33,9 @@ class DataCleaner:
         mongo_password = os.getenv("MONGO_PASSWORD", "admin")
         mongo_host = os.getenv("MONGO_HOST", "mongodb")
         mongo_port = os.getenv("MONGO_PORT", "27017")
-        mongo_url = f"mongodb://{mongo_user}:{mongo_password}@{mongo_host}:{mongo_port}/"
+        mongo_url = (
+            f"mongodb://{mongo_user}:{mongo_password}@{mongo_host}:{mongo_port}/"
+        )
         print(f"🔗 MongoDB connection: {mongo_url}")
         client = MongoClient(mongo_url, serverSelectionTimeoutMS=5000)
         client.server_info()  # force connection check
@@ -41,7 +44,14 @@ class DataCleaner:
     # Cleaning rules
     def clean_chunk(self, df: pd.DataFrame) -> pd.DataFrame:
         """Apply cleaning rules to a single DataFrame chunk."""
-        for col in ["passenger_count", "trip_distance", "fare_amount", "tip_amount", "tolls_amount", "total_amount"]:
+        for col in [
+            "passenger_count",
+            "trip_distance",
+            "fare_amount",
+            "tip_amount",
+            "tolls_amount",
+            "total_amount",
+        ]:
             if col in df.columns:
                 df = df[df[col] >= 0]
 
@@ -53,8 +63,16 @@ class DataCleaner:
             df = df[df["fare_amount"] <= 500]
 
         # Handle date columns
-        pickup_col = "pickup_datetime" if "pickup_datetime" in df.columns else "tpep_pickup_datetime"
-        dropoff_col = "dropoff_datetime" if "dropoff_datetime" in df.columns else "tpep_dropoff_datetime"
+        pickup_col = (
+            "pickup_datetime"
+            if "pickup_datetime" in df.columns
+            else "tpep_pickup_datetime"
+        )
+        dropoff_col = (
+            "dropoff_datetime"
+            if "dropoff_datetime" in df.columns
+            else "tpep_dropoff_datetime"
+        )
         df = df.dropna(subset=[c for c in [pickup_col, dropoff_col] if c in df.columns])
 
         return df
@@ -63,7 +81,9 @@ class DataCleaner:
     def process_batches(self):
         """Process PostgreSQL table in batches and save cleaned data to MongoDB."""
         with self.postgres_engine.connect() as conn:
-            total_rows = conn.execute(text("SELECT COUNT(*) FROM yellow_taxi_trips")).scalar()
+            total_rows = conn.execute(
+                text("SELECT COUNT(*) FROM yellow_taxi_trips")
+            ).scalar()
             print(f"Total rows in PostgreSQL: {total_rows}")
 
             offset = 0

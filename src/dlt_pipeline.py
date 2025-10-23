@@ -9,7 +9,9 @@ from tqdm import tqdm
 import gc
 from datetime import datetime
 
-logging.basicConfig(level=logging.INFO, format="%(asctime)s - %(levelname)s - %(message)s")
+logging.basicConfig(
+    level=logging.INFO, format="%(asctime)s - %(levelname)s - %(message)s"
+)
 
 
 class NYCTaxiDLTPipeline:
@@ -22,7 +24,9 @@ class NYCTaxiDLTPipeline:
         """Initialize pipeline and determine latest available year/month."""
         self.DATA_DIR.mkdir(parents=True, exist_ok=True)
         self.YEAR, self.months = self._get_available_months()
-        logging.info(f"Initialized NYCTaxiDLTPipeline for year {self.YEAR}, months {self.months}")
+        logging.info(
+            f"Initialized NYCTaxiDLTPipeline for year {self.YEAR}, months {self.months}"
+        )
 
     def _get_available_months(self) -> tuple[int, list[int]]:
         """
@@ -65,7 +69,9 @@ class NYCTaxiDLTPipeline:
         results = []
         with ThreadPoolExecutor(max_workers=self.MAX_WORKERS) as executor:
             futures = {executor.submit(self._download_if_needed, m): m for m in months}
-            for future in tqdm(as_completed(futures), total=len(futures), desc="Downloading files"):
+            for future in tqdm(
+                as_completed(futures), total=len(futures), desc="Downloading files"
+            ):
                 path = future.result()
                 if path:
                     results.append(path)
@@ -102,7 +108,7 @@ class NYCTaxiDLTPipeline:
             pipeline_name="nyc_taxi_pipeline",
             destination=destination,
             dataset_name="nyc_taxi_dlt",
-            full_refresh=False
+            full_refresh=False,
         )
 
         resource = self.get_resource()

@@ -35,7 +35,7 @@ COLUMN_MAPPING = {
     "improvement_surcharge": "improvement_surcharge",
     "total_amount": "total_amount",
     "congestion_surcharge": "congestion_surcharge",
-    "Airport_fee": "airport_fee"
+    "Airport_fee": "airport_fee",
 }
 
 # DuckDB connection
@@ -43,11 +43,7 @@ con = duckdb.connect(DUCKDB_FILE)
 
 # PostgreSQL connection
 pg_conn = psycopg2.connect(
-    dbname=PG_DB,
-    user=PG_USER,
-    password=PG_PASSWORD,
-    host=PG_HOST,
-    port=PG_PORT
+    dbname=PG_DB, user=PG_USER, password=PG_PASSWORD, host=PG_HOST, port=PG_PORT
 )
 
 # Fetch total number of rows
@@ -66,7 +62,14 @@ while offset < total_rows:
     df.rename(columns=COLUMN_MAPPING, inplace=True)
 
     # Cast integers
-    int_cols = ["vendor_id", "passenger_count", "ratecode_id", "pu_location_id", "do_location_id", "payment_type"]
+    int_cols = [
+        "vendor_id",
+        "passenger_count",
+        "ratecode_id",
+        "pu_location_id",
+        "do_location_id",
+        "payment_type",
+    ]
     for col in int_cols:
         if col in df.columns:
             df[col] = pd.to_numeric(df[col], errors="coerce").fillna(0).astype(int)
@@ -85,7 +88,10 @@ while offset < total_rows:
     # COPY into PostgreSQL
     with pg_conn.cursor() as cur:
         columns = df.columns.tolist()
-        cur.copy_expert(f"COPY {TABLE_NAME} ({', '.join(columns)}) FROM STDIN WITH CSV", file=csv_buffer)
+        cur.copy_expert(
+            f"COPY {TABLE_NAME} ({', '.join(columns)}) FROM STDIN WITH CSV",
+            file=csv_buffer,
+        )
         pg_conn.commit()
 
     print(f"Inserted rows {offset + 1} to {offset + len(df)}")

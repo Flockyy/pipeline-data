@@ -50,8 +50,7 @@ class DuckDBImporter:
     def is_file_imported(self, filename: str) -> bool:
         """Check if a given file has already been imported."""
         result = self.conn.execute(
-            "SELECT COUNT(*) FROM import_log WHERE file_name = ?",
-            [filename]
+            "SELECT COUNT(*) FROM import_log WHERE file_name = ?", [filename]
         ).fetchone()
         return result[0] > 0
 
@@ -64,15 +63,29 @@ class DuckDBImporter:
             return True
 
         try:
-            before_count = self.conn.execute("SELECT COUNT(*) FROM yellow_taxi_trips").fetchone()[0]
+            before_count = self.conn.execute(
+                "SELECT COUNT(*) FROM yellow_taxi_trips"
+            ).fetchone()[0]
 
             # Dynamically detect common columns
-            table_cols = [r[1] for r in self.conn.execute("PRAGMA table_info('yellow_taxi_trips')").fetchall()]
-            parquet_cols = [desc[0] for desc in self.conn.execute(f"SELECT * FROM read_parquet('{file_path}') LIMIT 0").description]
+            table_cols = [
+                r[1]
+                for r in self.conn.execute(
+                    "PRAGMA table_info('yellow_taxi_trips')"
+                ).fetchall()
+            ]
+            parquet_cols = [
+                desc[0]
+                for desc in self.conn.execute(
+                    f"SELECT * FROM read_parquet('{file_path}') LIMIT 0"
+                ).description
+            ]
             common_cols = [c for c in parquet_cols if c in table_cols]
 
             if not common_cols:
-                raise ValueError(f"No matching columns found between table and file {filename}")
+                raise ValueError(
+                    f"No matching columns found between table and file {filename}"
+                )
 
             col_list = ", ".join(common_cols)
 
@@ -82,13 +95,18 @@ class DuckDBImporter:
                 SELECT {col_list} FROM read_parquet('{file_path}')
             """)
 
-            after_count = self.conn.execute("SELECT COUNT(*) FROM yellow_taxi_trips").fetchone()[0]
+            after_count = self.conn.execute(
+                "SELECT COUNT(*) FROM yellow_taxi_trips"
+            ).fetchone()[0]
             rows_imported = after_count - before_count
 
-            self.conn.execute("""
+            self.conn.execute(
+                """
                 INSERT INTO import_log (file_name, import_date, rows_imported)
                 VALUES (?, ?, ?)
-            """, [filename, datetime.now(), rows_imported])
+            """,
+                [filename, datetime.now(), rows_imported],
+            )
 
             print(f"{filename} imported successfully ({rows_imported} rows).")
             return True
@@ -114,8 +132,12 @@ class DuckDBImporter:
 
     def get_statistics(self):
         """Display basic statistics about the imported data."""
-        total_trips = self.conn.execute("SELECT COUNT(*) FROM yellow_taxi_trips").fetchone()[0]
-        imported_files = self.conn.execute("SELECT COUNT(*) FROM import_log").fetchone()[0]
+        total_trips = self.conn.execute(
+            "SELECT COUNT(*) FROM yellow_taxi_trips"
+        ).fetchone()[0]
+        imported_files = self.conn.execute(
+            "SELECT COUNT(*) FROM import_log"
+        ).fetchone()[0]
 
         # Check date range if data exists
         date_range = self.conn.execute("""

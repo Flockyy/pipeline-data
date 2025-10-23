@@ -5,6 +5,7 @@ from typing import Optional, List
 
 # Base Schemas
 
+
 class TaxiTripBase(BaseModel):
     vendor_id: Optional[str] = None
     pickup_datetime: Optional[datetime] = None
