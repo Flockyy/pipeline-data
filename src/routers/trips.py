@@ -14,6 +14,7 @@ router = APIRouter()
 
 # --- CRUD: Taxi Trips ---
 
+
 @router.get("/trips", response_model=schemas.TaxiTripList, tags=["Trips"])
 def get_trips(skip: int = 0, limit: int = 100, db: Session = Depends(get_db)):
     """
@@ -47,7 +48,9 @@ def create_trip(trip: schemas.TaxiTripCreate, db: Session = Depends(get_db)):
 
 
 @router.put("/trips/{trip_id}", response_model=schemas.TaxiTrip, tags=["Trips"])
-def update_trip(trip_id: int, trip: schemas.TaxiTripUpdate, db: Session = Depends(get_db)):
+def update_trip(
+    trip_id: int, trip: schemas.TaxiTripUpdate, db: Session = Depends(get_db)
+):
     """
     Update an existing taxi trip record.
     Raises a 404 error if the trip ID does not exist.
@@ -73,6 +76,7 @@ def delete_trip(trip_id: int, db: Session = Depends(get_db)):
 
 # --- STATISTICS ---
 
+
 @router.get("/statistics", response_model=schemas.Statistics, tags=["Statistics"])
 def get_statistics(db: Session = Depends(get_db)):
     """
@@ -86,9 +90,13 @@ def get_statistics(db: Session = Depends(get_db)):
     stats = TaxiTripService.get_statistics(db)
     return stats
 
+
 # --- PIPELINE ---
 
-@router.post("/pipeline/run", response_model=schemas.PipelineResponse, tags=["Pipeline"])
+
+@router.post(
+    "/pipeline/run", response_model=schemas.PipelineResponse, tags=["Pipeline"]
+)
 def run_pipeline(background_tasks: BackgroundTasks, db: Session = Depends(get_db)):
     """
     Trigger the NYC Taxi DLT pipeline asynchronously (non-blocking).
@@ -104,7 +112,7 @@ def run_pipeline(background_tasks: BackgroundTasks, db: Session = Depends(get_db
         import_date=import_date,
         rows_imported=0,
         status="running",
-        message="Pipeline started..."
+        message="Pipeline started...",
     )
     db.add(log)
     db.commit()
@@ -115,6 +123,7 @@ def run_pipeline(background_tasks: BackgroundTasks, db: Session = Depends(get_db
         session = None
         try:
             from src.database import SessionLocal
+
             session = SessionLocal()
 
             pipeline = NYCTaxiDLTPipeline()
@@ -134,10 +143,14 @@ def run_pipeline(background_tasks: BackgroundTasks, db: Session = Depends(get_db
         except Exception as e:
             logging.error("Pipeline execution failed", exc_info=True)
             if session:
-                log_entry = session.query(ImportLog).filter(ImportLog.id == log_id).first()
+                log_entry = (
+                    session.query(ImportLog).filter(ImportLog.id == log_id).first()
+                )
                 if log_entry:
                     log_entry.status = "failed"
-                    log_entry.message = f"{type(e).__name__}: {str(e)}\n{traceback.format_exc()[:4000]}"
+                    log_entry.message = (
+                        f"{type(e).__name__}: {str(e)}\n{traceback.format_exc()[:4000]}"
+                    )
                     log_entry.completed_at = datetime.utcnow()
                     session.commit()
         finally:
@@ -153,5 +166,5 @@ def run_pipeline(background_tasks: BackgroundTasks, db: Session = Depends(get_db
         import_date=import_date,
         rows_imported=0,
         message="Pipeline started asynchronously.",
-        status="running"
+        status="running",
     )

@@ -2,6 +2,7 @@ from sqlalchemy import Column, Integer, String, Float, DateTime, BigInteger
 from datetime import datetime
 from src.database import Base
 
+
 class YellowTaxiTrip(Base):
     __tablename__ = "yellow_taxi_trips"
 

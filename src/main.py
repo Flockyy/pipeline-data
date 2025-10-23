@@ -11,7 +11,7 @@ Base.metadata.create_all(bind=engine)
 app = FastAPI(
     title="NYC Taxi Data Pipeline API",
     description="API to manage New York Yellow Taxi trips and execute data import pipelines.",
-    version="1.0.0"
+    version="1.0.0",
 )
 
 # CORS configuration (open to all for development)
@@ -23,18 +23,22 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
+
 @app.on_event("startup")
 def on_startup():
     init_db()
+
 
 # Main routes
 @app.get("/", tags=["Root"])
 def root():
     return {"message": "🚕 NYC Taxi API is running"}
 
+
 @app.get("/health", tags=["Health"])
 def health_check():
     return {"status": "ok"}
+
 
 # Include main router
 app.include_router(router, prefix="/api/v1")

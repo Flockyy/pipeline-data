@@ -4,6 +4,7 @@ from datetime import datetime
 from tqdm import tqdm  # Pretty progress bar
 from import_to_duckdb import DuckDBImporter
 
+
 class NYCTaxiDataDownloader:
     def __init__(self, year: int = 2025, data_dir: str = "data/raw"):
         """
@@ -45,14 +46,17 @@ class NYCTaxiDataDownloader:
                 total_size = int(response.headers.get("content-length", 0))
                 chunk_size = 8192
 
-                with open(file_path, "wb") as f, tqdm(
-                    total=total_size,
-                    unit="B",
-                    unit_scale=True,
-                    desc=file_path.name,
-                    ncols=80,
-                    colour="green"
-                ) as pbar:
+                with (
+                    open(file_path, "wb") as f,
+                    tqdm(
+                        total=total_size,
+                        unit="B",
+                        unit_scale=True,
+                        desc=file_path.name,
+                        ncols=80,
+                        colour="green",
+                    ) as pbar,
+                ):
                     for chunk in response.iter_content(chunk_size=chunk_size):
                         if chunk:
                             f.write(chunk)
@@ -86,6 +90,7 @@ class NYCTaxiDataDownloader:
 
         print(f"\n{len(downloaded_files)} files available/downloaded successfully.")
         return downloaded_files
+
 
 downloader = NYCTaxiDataDownloader(year=2025, data_dir="data/raw")
 downloader.download_all_available()
