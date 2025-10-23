@@ -2,6 +2,14 @@
 
 <!-- version list -->
 
+## v1.1.0 (2025-10-23)
+
+### Features
+
+- Async run pipeline
+  ([`98c8a47`](https://github.com/Flockyy/pipeline-data/commit/98c8a473da8f31aba98ae194ae3b31fb55a74173))
+
+
 ## v1.0.0 (2025-10-22)
 
 ### Chores
