@@ -1,4 +1,5 @@
 from sqlalchemy import Column, Integer, String, Float, DateTime, BigInteger
+from datetime import datetime
 from src.database import Base
 
 class YellowTaxiTrip(Base):
@@ -31,5 +32,8 @@ class ImportLog(Base):
 
     id = Column(Integer, primary_key=True, index=True)
     file_name = Column(String, nullable=False)
-    import_date = Column(DateTime, nullable=False)
-    rows_imported = Column(Integer, nullable=False)
+    import_date = Column(DateTime, default=datetime.utcnow, nullable=False)
+    completed_at = Column(DateTime, nullable=True)
+    rows_imported = Column(Integer, default=0, nullable=False)
+    status = Column(String, default="pending", nullable=False)
+    message = Column(String, nullable=True)
