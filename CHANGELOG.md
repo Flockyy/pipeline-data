@@ -2,6 +2,19 @@
 
 <!-- version list -->
 
+## v1.0.0-rc.6 (2025-10-23)
+
+### Chores
+
+- Typo cleaning
+  ([`649ec76`](https://github.com/Flockyy/pipeline-data/commit/649ec76f0e4df3a72ba0ca1fc8ef3a92e5980baf))
+
+### Features
+
+- Async run pipeline
+  ([`98c8a47`](https://github.com/Flockyy/pipeline-data/commit/98c8a473da8f31aba98ae194ae3b31fb55a74173))
+
+
 ## v1.0.0-rc.5 (2025-10-22)
 
 ### Features
